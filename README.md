@@ -4,9 +4,13 @@ print hello world
 
 ## 互動式網站：Startup Lab
 
-線上網站：<https://startup-regression-lab-1014.mossymelon32.chatgpt.site>
+公開網站（所有人可瀏覽，無須登入）：<https://bogerneal.github.io/1014/>
 
-已透過 Sites 發布，目前採擁有者私人存取；GitHub 原始碼則依本儲存庫既有權限存取。
+GitHub Pages 由 `.github/workflows/pages.yml` 自動部署 `website/dist/`。
+推送該目錄或部署工作流程的更新至 `main` 時會自動發布，也可在 Actions 手動執行。
+只更新 Python 分析時，請先執行下方數據重建指令，提交更新後的 `website/dist/data.js`。
+
+原 Sites 私人版本：<https://startup-regression-lab-1014.mossymelon32.chatgpt.site>（僅擁有者可存取）。
 `website/.openai/hosting.json` 保存既有 Site 識別，後續更新應沿用，不要重建 Site。
 
 以淺色卡片與青綠色介面呈現回歸分析，操作流程參考
