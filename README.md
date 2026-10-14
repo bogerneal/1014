@@ -2,6 +2,63 @@
 
 print hello world
 
+## 互動式網站：Startup Lab
+
+線上網站：<https://startup-regression-lab-1014.mossymelon32.chatgpt.site>
+
+已透過 Sites 發布，目前採擁有者私人存取；GitHub 原始碼則依本儲存庫既有權限存取。
+`website/.openai/hosting.json` 保存既有 Site 識別，後續更新應沿用，不要重建 Site。
+
+以淺色卡片與青綠色介面呈現回歸分析，操作流程參考
+[StatsUnlock 多元線性回歸工具](https://statsunlock.com/multiple-linear-regression-calculator/)，
+為本專案另行設計繁體中文介面。
+
+網站原始碼位於 `website/dist/`，使用 HTML、CSS、JavaScript，無須前端建置工具。
+
+### 功能
+
+- 自由勾選五個候選特徵，切換全部 31 個非空組合；包含三支出、雙支出與 Baseline 快速選項。
+- 即時顯示固定測試集 R²、RMSE、MAE，以及訓練集固定組合的 CV RMSE。
+- 滑桿／數字輸入調整支出、切換州別，計算全資料重訓模型的預測利潤與 95% 新觀測預測區間。
+- 檢視實際／預測散布圖、殘差、訓練集 OLS 係數、p 值、信賴區間、VIF 與 Cook’s distance。
+- 按特徵數比較訓練集 CV 最佳組合，也可查看原 Python 分析的五種特徵選擇方法。
+- 篩選原始資料州別，下載完整 CSV，匯出目前模型與情境的 JSON 報告。
+- 支援手機版排版、鍵盤切換分頁、至少保留一個特徵及輸入範圍檢查。
+
+### 本機啟動
+
+在專案根目錄執行，然後開啟 <http://localhost:8765>：
+
+```powershell
+.\.venv\Scripts\python.exe -m http.server 8765 --bind 127.0.0.1 --directory website/dist
+```
+
+網站包含預先計算的完整資料與統計結果；操作時在瀏覽器內更新，沒有 Python API。
+亦可直接開啟 `website/dist/index.html`。Google Fonts 需要網路，無法取得時使用系統字型。
+
+### 重建網站數據
+
+```powershell
+.\.venv\Scripts\python.exe main.py
+.\.venv\Scripts\python.exe export_web_data.py
+```
+
+`export_web_data.py` 會以相同 `seed=42`、40 筆訓練／10 筆測試，為 31 個固定組合產生
+`website/dist/data.js`。每組以 statsmodels 擬合 OLS，並使用 scikit-learn 計算訓練集 5-fold CV。
+JSON 匯出也保留全資料模型係數、共變異數矩陣、殘差變異數與預測情境。
+
+**分數定義：** 網站即時 CV 分數評估「固定特徵組合」；原分析方法比較則在每個外層訓練折
+重新選擇特徵，因此 CV 數字不必相同。按特徵數取 CV 最佳組合會有選擇樂觀偏差。
+不要反覆依測試分數挑選模型；係數推論與預測區間以 OLS 假設為前提，未校正特徵選擇。
+
+### 網站驗證（2026-10-14）
+
+以 Chrome headless 實際通過：HTTP 載入、31 組模型有限數值及係數數量、勾選防呆、
+支出調整與重設、三個分頁、州別篩選、CSV／JSON 下載，以及 390px 手機寬度無整頁水平溢出。
+桌面與手機截圖已人工檢視，未發現 JavaScript 執行錯誤。
+預設三支出模型的測試 R² `0.9001`、RMSE `8,995.91`、情境利潤 `59,045.64`
+均與 Python 結果一致。
+
 ## 50 Startups：多元線性回歸
 
 依 CRISP-DM 六階段，使用研發、行政、行銷支出及州別預測 Profit。
